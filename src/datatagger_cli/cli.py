@@ -233,6 +233,94 @@ async def raw(
     out(await req(method, path, params=params, body=body))
 
 
+# ================================================================ WORKFLOWS
+
+def _resource_id(resp: Any, hint: str) -> Optional[str]:
+    """Extract a resource UUID from an API response (dict or bare string)."""
+    if isinstance(resp, dict):
+        for key in (hint, 'id', 'uuid', 'name'):
+            val = resp.get(key)
+            if isinstance(val, str) and val:
+                return val
+        return None
+    if isinstance(resp, str) and resp.strip():
+        return resp.strip()
+    return None
+
+
+@app.command("new-dataset")
+async def new_dataset(
+    name: str = typer.Argument(..., help="Dataset name"),
+    project: Optional[str] = typer.Option(None, "--project",
+                                          help="Existing project UUID (with --folder optional)"),
+    project_name: Optional[str] = typer.Option(None, "--project-name",
+                                               help="Create a new project with this name"),
+    folder: Optional[str] = typer.Option(None, "--folder",
+                                         help="Existing folder UUID"),
+    folder_name: Optional[str] = typer.Option(None, "--folder-name",
+                                              help="Create a new folder in the project"),
+    file: Optional[str] = typer.Option(None, "--file",
+                                       help="Local file to upload (TUS)"),
+    metadata: Optional[str] = typer.Option(None, "--metadata",
+                                           help="Metadata items as JSON or @file"),
+    publish: bool = typer.Option(False, "--publish",
+                                 help="Publish/finalize the dataset afterwards"),
+):
+    """One-command workflow: project -> folder -> dataset -> (file) -> (metadata) -> (publish).
+
+    Use ``--project`` + ``--folder`` to target existing resources, or
+    ``--project-name`` + ``--folder-name`` to create them on the fly.
+    """
+    # 1. Project
+    project_id = project
+    if not project_id and project_name:
+        created = await create_project(name=project_name)
+        project_id = _resource_id(created, "project_id")
+        if not project_id:
+            console.print(f"[bold red]Could not resolve project UUID from: {created}[/bold red]")
+            raise typer.Exit(1)
+        console.print(f"[green]Project created: {project_name} ({project_id})[/green]")
+    if not project_id:
+        console.print("[bold red]Provide --project <uuid> or --project-name <name>.[/bold red]")
+        raise typer.Exit(2)
+
+    # 2. Folder
+    folder_id = folder
+    if not folder_id and folder_name:
+        created = await create_folder(project_id=project_id, name=folder_name)
+        folder_id = _resource_id(created, "folder_id")
+        if not folder_id:
+            console.print(f"[bold red]Could not resolve folder UUID from: {created}[/bold red]")
+            raise typer.Exit(1)
+        console.print(f"[green]Folder created: {folder_name} ({folder_id})[/green]")
+
+    # 3. Dataset
+    created = await create_dataset(name=name, folder_id=folder_id)
+    dataset_id = _resource_id(created, "dataset_id")
+    if not dataset_id:
+        console.print(f"[bold red]Could not resolve dataset UUID from: {created}[/bold red]")
+        raise typer.Exit(1)
+    console.print(f"[green]Dataset created: {name} ({dataset_id})[/green]")
+
+    # 4. File upload
+    if file:
+        console.print(f"[cyan]Uploading {file}...[/cyan]")
+        out(await upload_dataset_file(dataset_id, file))
+
+    # 5. Metadata
+    if metadata:
+        console.print("[cyan]Adding metadata...[/cyan]")
+        out(await add_metadata_to_dataset(dataset_id, parse_json_arg(metadata)))
+
+    # 6. Publish
+    if publish:
+        console.print("[cyan]Publishing...[/cyan]")
+        out(await publish_dataset(dataset_id))
+
+    console.print(f"[bold green]Done: {name} -> {dataset_id}[/bold green]")
+    out(created)
+
+
 # ================================================================ AUTH
 
 auth_app = AsyncTyper(help="Authentication", no_args_is_help=True)
