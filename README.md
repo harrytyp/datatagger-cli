@@ -1,9 +1,11 @@
 # datatagger-cli
 
-Cross-platform CLI for the **TUM DataTagger API** — full API coverage, built
-high-level on top of the [`datatagger-mcp`](https://github.com/harrytyp/datatagger-mcp)
-library (same auth logic, same error handling). Runs anywhere Python 3.11+ runs
-(Windows / macOS / Linux).
+Cross-platform CLI for the **TUM DataTagger API** — full API coverage with
+high-level commands. Runs anywhere Python 3.11+ runs (Windows / macOS / Linux).
+No runtime dependency on any MCP server: authentication and HTTP are
+implemented directly (Bearer token from `FDM_TOKEN`), and the command structure
+is inspired by the `datatagger-mcp` library's tool design for a simple user
+experience.
 
 ## Features
 
@@ -11,8 +13,9 @@ library (same auth logic, same error handling). Runs anywhere Python 3.11+ runs
   folders, datasets, versions, version files, metadata (tags/fields/templates/
   containers/exports), parser configurations, data export jobs, storage,
   approval queue, users, auth, dashboard/settings/CMS/FAQ.
-- **High-level UX** — commands map 1:1 to the MCP library's tools where they
-  exist, so behavior and error formatting are consistent.
+- **High-level UX** — commands are grouped and concise; the HTTP layer
+  (`client.py`) centralizes auth, error formatting and file transfers (TUS
+  uploads, streaming downloads).
 - **`raw` escape hatch** — any API call, even for endpoints without a dedicated
   command: `datatagger raw GET /api/v1/settings/ --query limit=1`.
 - **Machine-readable output** — every command prints valid JSON (or a clear
@@ -26,7 +29,7 @@ library (same auth logic, same error handling). Runs anywhere Python 3.11+ runs
 ```bash
 git clone https://github.com/harrytyp/datatagger-cli.git
 cd datatagger-cli
-uv sync            # creates .venv, installs deps (incl. datatagger-mcp from Git)
+uv sync            # creates .venv, installs dependencies
 uv run datatagger --help
 ```
 
@@ -106,22 +109,27 @@ uv run python tests/live_test.py
 ```
 
 It creates its own resources with a `dtcli-test-<timestamp>` prefix and cleans up
-afterwards. Expected API/role limitations (admin-only endpoints, the known
-`compare` bug in the MCP library, …) are reported as `DOC` instead of `FAIL`.
+afterwards. Expected API/role limitations (admin-only endpoints, missing
+credentials, …) are reported as `DOC` instead of `FAIL`.
 
-## Known issues / API notes
+## Known issues
 
-- `dataset compare` uses the MCP function `compare_dataset_versions`; the current
-  API expects `GET /uploads-version/{id}/diff/?compare=…` instead of `POST` →
-  returns 405 until the `datatagger-mcp` library is fixed (the CLI then picks up
-  the fix automatically). Use `version diff` (GET endpoint) in the meantime.
-- `folder set-permissions`: `folder_users` items now expect **`email`** (not
-  `member`) — API change vs. the MCP library docs.
+**CLI:** none currently known — the live test suite (tests/live_test.py) runs
+every command against the real API with 0 failures (see [Tests](#tests)).
+
+**Upstream API notes** (behavior of the DataTagger API itself; the CLI handles
+or surfaces these cleanly):
+
+- `description` (project/folder) is a **JSON object** in the current API
+  (e.g. `{"en": "…"}`). The CLI wraps plain text into `{"en": …}` automatically;
+  a raw string causes a server-side 500 on create.
+- `folder set-permissions`: `folder_users` items expect **`email`** (not
+  `member`).
 - `publish`/`bulk-publish` require a publish role (403 for normal accounts);
   TUS uploads already finalize datasets.
 - `dataset reference`, `storage create`, `approval-queue approve`,
   `auth login`/`refresh` need storage paths / admin rights / real credentials —
-  marked `DOC` in the tests.
+  marked `DOC` in the test suite.
 
 ## License
 

@@ -438,7 +438,7 @@ Restore a dataset to a historical version.
 
 ### `dataset compare`
 
-Diff between two dataset versions (MCP function).
+Diff between two dataset versions (GET endpoint of the current API).
 
 **Signature:** `datatagger dataset compare <version_id> <compare_to_id>`
 

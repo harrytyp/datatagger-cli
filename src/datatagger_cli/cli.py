@@ -1,8 +1,8 @@
 """DataTagger CLI commands.
 
-High-level functions come from the datatagger-mcp library (same auth, same
-error handling). Endpoints not covered by the library are called via
-`client.req` (the same make_fdm_request helper).
+Own high-level command layer for the TUM DataTagger API. Authentication and
+HTTP live in `client.py` (Bearer token from FDM_TOKEN); commands stay
+high-level and grouped for a simple user experience.
 """
 
 from __future__ import annotations
@@ -12,43 +12,132 @@ import functools
 import inspect
 import json
 import logging
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import typer
 from rich.console import Console
 from rich.json import JSON
 
-# suppress httpx INFO logs from the library (only show errors)
+# suppress httpx INFO logs from the HTTP layer (only show errors)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 
-from datatagger_mcp.api import (
-    add_metadata_to_dataset,
-    compare_dataset_versions,
-    create_dataset,
-    create_folder,
-    create_project,
-    delete_dataset,
-    delete_folder,
-    delete_project,
-    download_fdm_file,
-    get_folder,
-    get_folder_permissions,
-    get_project,
-    list_datasets,
-    list_folders,
-    list_metadata,
-    list_projects,
-    publish_dataset,
-    restore_dataset_version,
-    search_datatagger,
-    set_folder_permissions,
-    update_folder,
-    update_project,
-    upload_dataset_file,
+from .client import (
+    download_file,
+    multipart_post,
+    parse_description,
+    parse_json_arg,
+    parse_kv_query,
+    req,
+    upload_file_tus,
 )
 
-from .client import multipart_post, parse_description, parse_json_arg, parse_kv_query, req
+
+# --- High-level API helpers.
+#     Own implementation (no datatagger-mcp dependency): auth + HTTP live in
+#     client.py. The command layer talks exclusively to these wrappers; their
+#     signatures match the datatagger-mcp tool functions that used to back
+#     them, so commands stay high-level and readable.
+
+_SEARCH_RESULT_TYPES = [
+    "project", "folder", "dataset", "dataset_version", "file", "template", "template_version",
+]
+
+
+async def search_datatagger(term: str, limit: int = 25) -> Any:
+    return await req("POST", "/api/v1/search/global/", body={
+        "search_text": term, "limit": limit, "result_types": _SEARCH_RESULT_TYPES})
+
+
+async def list_projects(limit: int = 100, offset: int = 0, search: str = "") -> Any:
+    return await req("GET", "/api/v1/project/", params={
+        "limit": limit, "offset": offset, "search": search})
+
+
+async def get_project(project_id: str) -> Any:
+    return await req("GET", f"/api/v1/project/{project_id}/")
+
+
+async def create_project(name: str) -> Any:
+    return await req("POST", "/api/v1/project/", body={"name": name})
+
+
+async def delete_project(project_id: str, confirm_danger: bool = False) -> Any:
+    return await req("DELETE", f"/api/v1/project/{project_id}/")
+
+
+async def list_folders(project: str = "", limit: int = 100, offset: int = 0, search: str = "") -> Any:
+    return await req("GET", "/api/v1/folder/", params={
+        "project": project, "limit": limit, "offset": offset, "search": search})
+
+
+async def get_folder(folder_id: str) -> Any:
+    return await req("GET", f"/api/v1/folder/{folder_id}/")
+
+
+async def create_folder(project_id: str, name: str) -> Any:
+    return await req("POST", "/api/v1/folder/", body={"project": project_id, "name": name})
+
+
+async def delete_folder(folder_id: str, confirm_danger: bool = False) -> Any:
+    return await req("DELETE", f"/api/v1/folder/{folder_id}/")
+
+
+async def list_datasets(folder_id: str = "", limit: int = 100, offset: int = 0, search: str = "") -> Any:
+    return await req("GET", "/api/v1/uploads-dataset/", params={
+        "folder": folder_id, "limit": limit, "offset": offset, "search": search})
+
+
+async def create_dataset(name: str, folder_id: Optional[str] = None) -> Any:
+    body = {"name": name}
+    if folder_id:
+        body["folder"] = folder_id
+    return await req("POST", "/api/v1/uploads-dataset/", body=body)
+
+
+async def delete_dataset(dataset_id: str, confirm_danger: bool = False) -> Any:
+    return await req("DELETE", f"/api/v1/uploads-dataset/{dataset_id}/")
+
+
+async def publish_dataset(dataset_id: str) -> Any:
+    return await req("POST", f"/api/v1/uploads-dataset/{dataset_id}/publish/", body={})
+
+
+async def restore_dataset_version(dataset_id: str, uploads_version_id: str) -> Any:
+    return await req("POST", f"/api/v1/uploads-dataset/{dataset_id}/restore/",
+                     body={"uploads_version": uploads_version_id})
+
+
+async def compare_dataset_versions(version_id: str, compare_to_id: str) -> Any:
+    """Diff between two dataset versions (GET endpoint of the current API)."""
+    return await req("GET", f"/api/v1/uploads-version/{version_id}/diff/",
+                     params={"compare": compare_to_id})
+
+
+async def upload_dataset_file(dataset_id: str, source_path: str) -> Any:
+    return await upload_file_tus(f"/api/v1/uploads-dataset/{dataset_id}/file/", source_path)
+
+
+async def download_fdm_file(endpoint: str, dest_path: str, overwrite: bool = False) -> Any:
+    return await download_file(endpoint, dest_path, overwrite)
+
+
+async def get_folder_permissions(folder_id: str) -> Any:
+    return await req("GET", "/api/v1/folder-permission/", params={"folder": folder_id})
+
+
+async def set_folder_permissions(folder_id: str, folder_users: List[Dict[str, Any]]) -> Any:
+    return await req("PUT", f"/api/v1/folder/{folder_id}/permissions/",
+                     body={"folder_users": folder_users})
+
+
+async def list_metadata(search: str = "", limit: int = 100) -> Any:
+    return await req("GET", "/api/v1/metadata/", params={"limit": limit, "search": search})
+
+
+async def add_metadata_to_dataset(dataset_id: str, metadata_items: List[Dict[str, Any]]) -> Any:
+    return await req("POST", f"/api/v1/uploads-dataset/{dataset_id}/version/",
+                     body={"metadata": metadata_items})
 
 class AsyncTyper(typer.Typer):
     """Typer subclass that runs async command functions in asyncio.run() automatically."""
@@ -71,7 +160,7 @@ class AsyncTyper(typer.Typer):
 
 console = Console()
 app = AsyncTyper(
-    help="DataTagger CLI – full API access, high-level on top of the datatagger-mcp library.\n\nAuth: FDM_TOKEN (Bearer) + FDM_BASE_URL (default https://datatagger.ub.tum.de) as environment variables.",
+    help="DataTagger CLI – full API access with high-level commands for the TUM DataTagger API.\n\nAuth: FDM_TOKEN (Bearer) + FDM_BASE_URL (default https://datatagger.ub.tum.de) as environment variables.",
     no_args_is_help=True,
 )
 
@@ -578,7 +667,7 @@ async def dataset_compare(
     version_id: str = typer.Argument(...),
     compare_to_id: str = typer.Argument(..., help="other uploads_version UUID"),
 ):
-    """Diff between two dataset versions (MCP function)."""
+    """Diff between two dataset versions (GET endpoint of the current API)."""
     out(await compare_dataset_versions(version_id, compare_to_id))
 
 

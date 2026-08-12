@@ -289,8 +289,7 @@ def main():
     print(f"   -> Version 2: {v2}")
     if v1 and v2:
         T("version diff (GET, aktueller Endpunkt)", ["version", "diff", v2, v1])
-        T("dataset compare (MCP-Funktion, bekannter 405-Bug)", ["dataset", "compare", v2, v1], mode="doc",
-          expect_in="405")
+        T("dataset compare (GET-Endpunkt)", ["dataset", "compare", v2, v1])
         T("dataset restore", ["dataset", "restore", ds_id, v1])
     T("dataset publish (403 ohne Publish-Rolle erwartet)", ["dataset", "publish", ds_id], mode="any")
     T("dataset status", ["dataset", "status", ds_id])
