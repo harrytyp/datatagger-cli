@@ -19,11 +19,11 @@ Search globally across projects, folders, datasets, files and templates.
 | `term` | argument **required** | Search term |
 | `limit` | argument | Max. results (1–100) (default: 25) |
 
-## `raw`
+## `api raw`
 
 Arbitrary API call (escape hatch for anything without a dedicated command).
 
-**Signature:** `datatagger raw <method> <path> <data> <query>`
+**Signature:** `datatagger api raw <method> <path> <data> <query>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -32,54 +32,54 @@ Arbitrary API call (escape hatch for anything without a dedicated command).
 | `data` | argument | JSON body or @file.json |
 | `query` | argument | Query param k=v (repeatable) |
 
-## `auth`
+## `api auth`
 
-### `auth login`
+### `api auth login`
 
 Log in with username/password and print access & refresh tokens.
 
-**Signature:** `datatagger auth login <username> <password>`
+**Signature:** `datatagger api auth login <username> <password>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `username` | argument **required** | TUM ID / email |
 | `password` | argument | Password (prompted) |
 
-### `auth verify`
+### `api auth verify`
 
 Verify the current token.
 
-**Signature:** `datatagger auth verify <token>`
+**Signature:** `datatagger api auth verify <token>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `token` | argument | Token to verify (default: FDM_TOKEN) |
 
-### `auth refresh`
+### `api auth refresh`
 
 Exchange a refresh token for a new access token.
 
-**Signature:** `datatagger auth refresh <refresh>`
+**Signature:** `datatagger api auth refresh <refresh>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `refresh` | argument **required** | Refresh token |
 
-### `auth jwt-cookie`
+### `api auth jwt-cookie`
 
 Convert a JWT into an HTTP cookie (web UI auth).
 
-**Signature:** `datatagger auth jwt-cookie <token>`
+**Signature:** `datatagger api auth jwt-cookie <token>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `token` | argument | Token (default: FDM_TOKEN) |
 
-## `project`
+## `api project`
 
-### `project list`
+### `api project list`
 
-**Signature:** `datatagger project list <limit> <offset> <search>`
+**Signature:** `datatagger api project list <limit> <offset> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -87,19 +87,19 @@ Convert a JWT into an HTTP cookie (web UI auth).
 | `offset` | argument | Offset (default: 0) |
 | `search` | argument | Search filter |
 
-### `project get`
+### `api project get`
 
-**Signature:** `datatagger project get <project_id>`
+**Signature:** `datatagger api project get <project_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** | Project UUID |
 
-### `project create`
+### `api project create`
 
 Create a project (MCP high-level for the name; extended fields optional).
 
-**Signature:** `datatagger project create <name> <description> <folder_name> <users> <metadata>`
+**Signature:** `datatagger api project create <name> <description> <folder_name> <users> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -109,9 +109,9 @@ Create a project (MCP high-level for the name; extended fields optional).
 | `users` | argument | project_users as JSON or @file |
 | `metadata` | argument | Metadata as JSON or @file |
 
-### `project update`
+### `api project update`
 
-**Signature:** `datatagger project update <project_id> <name> <description> <metadata>`
+**Signature:** `datatagger api project update <project_id> <name> <description> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -120,20 +120,20 @@ Create a project (MCP high-level for the name; extended fields optional).
 | `description` | argument |  |
 | `metadata` | argument |  |
 
-### `project delete`
+### `api project delete`
 
-**Signature:** `datatagger project delete <project_id> <confirm>`
+**Signature:** `datatagger api project delete <project_id> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 | `confirm` | argument | Confirm deletion (default: False) |
 
-### `project folders`
+### `api project folders`
 
 List the folders of a project.
 
-**Signature:** `datatagger project folders <project_id> <limit> <offset>`
+**Signature:** `datatagger api project folders <project_id> <limit> <offset>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -141,79 +141,79 @@ List the folders of a project.
 | `limit` | argument |  (default: 100) |
 | `offset` | argument |  (default: 0) |
 
-### `project members`
+### `api project members`
 
 List the memberships of a project (client-side filtered).
 
-**Signature:** `datatagger project members <project_id>`
+**Signature:** `datatagger api project members <project_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 
-### `project members-set`
+### `api project members-set`
 
 Replace the member array of a project (warning: replaces everything!).
 
-**Signature:** `datatagger project members-set <project_id> <users>`
+**Signature:** `datatagger api project members-set <project_id> <users>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 | `users` | argument **required** | project_users as JSON or @file |
 
-### `project lock`
+### `api project lock`
 
-**Signature:** `datatagger project lock <project_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `project_id` | argument **required** |  |
-
-### `project unlock`
-
-**Signature:** `datatagger project unlock <project_id>`
+**Signature:** `datatagger api project lock <project_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 
-### `project status`
+### `api project unlock`
 
-**Signature:** `datatagger project status <project_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `project_id` | argument **required** |  |
-
-### `project metadata-templates`
-
-**Signature:** `datatagger project metadata-templates <project_id>`
+**Signature:** `datatagger api project unlock <project_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 
-### `project template-container-pool`
+### `api project status`
 
-**Signature:** `datatagger project template-container-pool <project_id>`
+**Signature:** `datatagger api project status <project_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `project_id` | argument **required** |  |
 
-### `project membership-list`
+### `api project metadata-templates`
 
-**Signature:** `datatagger project membership-list <limit> <offset>`
+**Signature:** `datatagger api project metadata-templates <project_id>`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `project_id` | argument **required** |  |
+
+### `api project template-container-pool`
+
+**Signature:** `datatagger api project template-container-pool <project_id>`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `project_id` | argument **required** |  |
+
+### `api project membership-list`
+
+**Signature:** `datatagger api project membership-list <limit> <offset>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 | `offset` | argument |  (default: 0) |
 
-### `project membership-create`
+### `api project membership-create`
 
-**Signature:** `datatagger project membership-create <project_id> <member> <is_project_admin> <can_create_folders> <is_metadata_template_admin>`
+**Signature:** `datatagger api project membership-create <project_id> <member> <is_project_admin> <can_create_folders> <is_metadata_template_admin>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -223,9 +223,9 @@ Replace the member array of a project (warning: replaces everything!).
 | `can_create_folders` | argument |  (default: True) |
 | `is_metadata_template_admin` | argument |  (default: False) |
 
-### `project membership-update`
+### `api project membership-update`
 
-**Signature:** `datatagger project membership-update <membership_id> <is_project_admin> <can_create_folders> <is_metadata_template_admin>`
+**Signature:** `datatagger api project membership-update <membership_id> <is_project_admin> <can_create_folders> <is_metadata_template_admin>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -234,20 +234,20 @@ Replace the member array of a project (warning: replaces everything!).
 | `can_create_folders` | argument |  |
 | `is_metadata_template_admin` | argument |  |
 
-### `project membership-delete`
+### `api project membership-delete`
 
-**Signature:** `datatagger project membership-delete <membership_id> <confirm>`
+**Signature:** `datatagger api project membership-delete <membership_id> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `membership_id` | argument **required** |  |
 | `confirm` | argument |  (default: False) |
 
-## `folder`
+## `api folder`
 
-### `folder list`
+### `api folder list`
 
-**Signature:** `datatagger folder list <project> <limit> <offset> <search>`
+**Signature:** `datatagger api folder list <project> <limit> <offset> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -256,19 +256,19 @@ Replace the member array of a project (warning: replaces everything!).
 | `offset` | argument |  (default: 0) |
 | `search` | argument |  |
 
-### `folder get`
+### `api folder get`
 
-**Signature:** `datatagger folder get <folder_id>`
+**Signature:** `datatagger api folder get <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 
-### `folder create`
+### `api folder create`
 
 Create a folder (MCP high-level for name+project; extended fields optional).
 
-**Signature:** `datatagger folder create <project_id> <name> <description> <storage> <metadata> <users>`
+**Signature:** `datatagger api folder create <project_id> <name> <description> <storage> <metadata> <users>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -279,9 +279,9 @@ Create a folder (MCP high-level for name+project; extended fields optional).
 | `metadata` | argument |  |
 | `users` | argument |  |
 
-### `folder update`
+### `api folder update`
 
-**Signature:** `datatagger folder update <folder_id> <name> <description> <storage> <metadata>`
+**Signature:** `datatagger api folder update <folder_id> <name> <description> <storage> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -291,81 +291,81 @@ Create a folder (MCP high-level for name+project; extended fields optional).
 | `storage` | argument |  |
 | `metadata` | argument |  |
 
-### `folder delete`
+### `api folder delete`
 
-**Signature:** `datatagger folder delete <folder_id> <confirm>`
+**Signature:** `datatagger api folder delete <folder_id> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 | `confirm` | argument |  (default: False) |
 
-### `folder lock`
+### `api folder lock`
 
-**Signature:** `datatagger folder lock <folder_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `folder_id` | argument **required** |  |
-
-### `folder unlock`
-
-**Signature:** `datatagger folder unlock <folder_id>`
+**Signature:** `datatagger api folder lock <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 
-### `folder status`
+### `api folder unlock`
 
-**Signature:** `datatagger folder status <folder_id>`
+**Signature:** `datatagger api folder unlock <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 
-### `folder permissions`
+### `api folder status`
+
+**Signature:** `datatagger api folder status <folder_id>`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `folder_id` | argument **required** |  |
+
+### `api folder permissions`
 
 List the active user permissions of a folder.
 
-**Signature:** `datatagger folder permissions <folder_id>`
+**Signature:** `datatagger api folder permissions <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 
-### `folder set-permissions`
+### `api folder set-permissions`
 
 Set the permission array of a folder.
 
-**Signature:** `datatagger folder set-permissions <folder_id> <users>`
+**Signature:** `datatagger api folder set-permissions <folder_id> <users>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 | `users` | argument **required** | folder_users as JSON or @file |
 
-### `folder metadata-templates`
+### `api folder metadata-templates`
 
-**Signature:** `datatagger folder metadata-templates <folder_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `folder_id` | argument **required** |  |
-
-### `folder template-container-pool`
-
-**Signature:** `datatagger folder template-container-pool <folder_id>`
+**Signature:** `datatagger api folder metadata-templates <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder_id` | argument **required** |  |
 
-## `dataset`
+### `api folder template-container-pool`
 
-### `dataset list`
+**Signature:** `datatagger api folder template-container-pool <folder_id>`
 
-**Signature:** `datatagger dataset list <folder> <name> <status> <locked> <created_by> <ordering> <limit> <offset> <search>`
+| Parameter | Type | Description |
+|---|---|---|
+| `folder_id` | argument **required** |  |
+
+## `api dataset`
+
+### `api dataset list`
+
+**Signature:** `datatagger api dataset list <folder> <name> <status> <locked> <created_by> <ordering> <limit> <offset> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -379,26 +379,26 @@ Set the permission array of a folder.
 | `offset` | argument |  (default: 0) |
 | `search` | argument |  |
 
-### `dataset get`
+### `api dataset get`
 
-**Signature:** `datatagger dataset get <dataset_id>`
+**Signature:** `datatagger api dataset get <dataset_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 
-### `dataset create`
+### `api dataset create`
 
-**Signature:** `datatagger dataset create <name> <folder_id>`
+**Signature:** `datatagger api dataset create <name> <folder_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `name` | argument **required** |  |
 | `folder_id` | argument | Folder UUID (otherwise draft) |
 
-### `dataset update`
+### `api dataset update`
 
-**Signature:** `datatagger dataset update <dataset_id> <name> <metadata_template>`
+**Signature:** `datatagger api dataset update <dataset_id> <name> <metadata_template>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -406,86 +406,86 @@ Set the permission array of a folder.
 | `name` | argument |  |
 | `metadata_template` | argument |  |
 
-### `dataset delete`
+### `api dataset delete`
 
-**Signature:** `datatagger dataset delete <dataset_id> <confirm>`
+**Signature:** `datatagger api dataset delete <dataset_id> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `confirm` | argument |  (default: False) |
 
-### `dataset publish`
+### `api dataset publish`
 
 Finalize/publish a dataset.
 
-**Signature:** `datatagger dataset publish <dataset_id> <folder>`
+**Signature:** `datatagger api dataset publish <dataset_id> <folder>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `folder` | argument | Optional target folder |
 
-### `dataset restore`
+### `api dataset restore`
 
 Restore a dataset to a historical version.
 
-**Signature:** `datatagger dataset restore <dataset_id> <version_id>`
+**Signature:** `datatagger api dataset restore <dataset_id> <version_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `version_id` | argument **required** | uploads_version UUID |
 
-### `dataset compare`
+### `api dataset compare`
 
 Diff between two dataset versions (GET endpoint of the current API).
 
-**Signature:** `datatagger dataset compare <version_id> <compare_to_id>`
+**Signature:** `datatagger api dataset compare <version_id> <compare_to_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `version_id` | argument **required** |  |
 | `compare_to_id` | argument **required** | other uploads_version UUID |
 
-### `dataset upload`
+### `api dataset upload`
 
 Upload a file into a dataset (TUS protocol, like the web UI).
 
-**Signature:** `datatagger dataset upload <dataset_id> <source_path>`
+**Signature:** `datatagger api dataset upload <dataset_id> <source_path>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `source_path` | argument **required** | Local file (TUS resumable) |
 
-### `dataset file-upload`
+### `api dataset file-upload`
 
 Upload a file via legacy multipart (POST /file/).
 
-**Signature:** `datatagger dataset file-upload <dataset_id> <source_path>`
+**Signature:** `datatagger api dataset file-upload <dataset_id> <source_path>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `source_path` | argument **required** |  |
 
-### `dataset add-metadata`
+### `api dataset add-metadata`
 
 Append metadata tags to a dataset (creates a new version).
 
-**Signature:** `datatagger dataset add-metadata <dataset_id> <metadata>`
+**Signature:** `datatagger api dataset add-metadata <dataset_id> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `metadata` | argument **required** | Metadata items as JSON or @file |
 
-### `dataset new-version`
+### `api dataset new-version`
 
 Create a new version of a dataset.
 
-**Signature:** `datatagger dataset new-version <dataset_id> <name> <metadata>`
+**Signature:** `datatagger api dataset new-version <dataset_id> <name> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -493,74 +493,74 @@ Create a new version of a dataset.
 | `name` | argument |  |
 | `metadata` | argument |  |
 
-### `dataset reference`
+### `api dataset reference`
 
 Reference an existing storage file.
 
-**Signature:** `datatagger dataset reference <dataset_id> <filepath>`
+**Signature:** `datatagger api dataset reference <dataset_id> <filepath>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 | `filepath` | argument **required** | Path to an existing file on the storage |
 
-### `dataset lock`
+### `api dataset lock`
 
-**Signature:** `datatagger dataset lock <dataset_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `dataset_id` | argument **required** |  |
-
-### `dataset unlock`
-
-**Signature:** `datatagger dataset unlock <dataset_id>`
+**Signature:** `datatagger api dataset lock <dataset_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 
-### `dataset status`
+### `api dataset unlock`
 
-**Signature:** `datatagger dataset status <dataset_id>`
+**Signature:** `datatagger api dataset unlock <dataset_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_id` | argument **required** |  |
 
-### `dataset bulk-delete`
+### `api dataset status`
 
-**Signature:** `datatagger dataset bulk-delete <dataset_ids> <confirm>`
+**Signature:** `datatagger api dataset status <dataset_id>`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `dataset_id` | argument **required** |  |
+
+### `api dataset bulk-delete`
+
+**Signature:** `datatagger api dataset bulk-delete <dataset_ids> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_ids` | argument **required** | Dataset UUIDs |
 | `confirm` | argument |  (default: False) |
 
-### `dataset bulk-publish`
+### `api dataset bulk-publish`
 
-**Signature:** `datatagger dataset bulk-publish <folder> <dataset_ids>`
+**Signature:** `datatagger api dataset bulk-publish <folder> <dataset_ids>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `folder` | argument **required** | Target folder UUID |
 | `dataset_ids` | argument **required** | Dataset UUIDs |
 
-### `dataset bulk-upgrade`
+### `api dataset bulk-upgrade`
 
 Bulk: trigger a metadata template upgrade.
 
-**Signature:** `datatagger dataset bulk-upgrade <dataset_ids>`
+**Signature:** `datatagger api dataset bulk-upgrade <dataset_ids>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_ids` | argument **required** | Dataset UUIDs |
 
-### `dataset upgrade`
+### `api dataset upgrade`
 
 Metadata template upgrade of a dataset (one mode required).
 
-**Signature:** `datatagger dataset upgrade <dataset_id> <status> <payload> <submit> <resolve_conflict> <json_data>`
+**Signature:** `datatagger api dataset upgrade <dataset_id> <status> <payload> <submit> <resolve_conflict> <json_data>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -571,11 +571,11 @@ Metadata template upgrade of a dataset (one mode required).
 | `resolve_conflict` | argument | Resolve conflict (default: False) |
 | `json_data` | argument | JSON for --resolve-conflict (base_version_pk, resolutions) |
 
-## `version`
+## `api version`
 
-### `version list`
+### `api version list`
 
-**Signature:** `datatagger version list <dataset> <dataset_folder> <limit> <offset> <search>`
+**Signature:** `datatagger api version list <dataset> <dataset_folder> <limit> <offset> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -585,17 +585,17 @@ Metadata template upgrade of a dataset (one mode required).
 | `offset` | argument |  (default: 0) |
 | `search` | argument |  |
 
-### `version get`
+### `api version get`
 
-**Signature:** `datatagger version get <version_id>`
+**Signature:** `datatagger api version get <version_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `version_id` | argument **required** |  |
 
-### `version update`
+### `api version update`
 
-**Signature:** `datatagger version update <version_id> <name> <status>`
+**Signature:** `datatagger api version update <version_id> <name> <status>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -603,17 +603,17 @@ Metadata template upgrade of a dataset (one mode required).
 | `name` | argument |  |
 | `status` | argument | SCHEDULED/IN_PROGRESS/ERROR/FINISHED |
 
-### `version status`
+### `api version status`
 
-**Signature:** `datatagger version status <version_id>`
+**Signature:** `datatagger api version status <version_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `version_id` | argument **required** |  |
 
-### `version download`
+### `api version download`
 
-**Signature:** `datatagger version download <version_id> <dest_path> <overwrite>`
+**Signature:** `datatagger api version download <version_id> <dest_path> <overwrite>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -621,121 +621,121 @@ Metadata template upgrade of a dataset (one mode required).
 | `dest_path` | argument **required** | Local destination path |
 | `overwrite` | argument |  (default: False) |
 
-### `version diff`
+### `api version diff`
 
 Diff between two versions (GET endpoint of the current API).
 
-**Signature:** `datatagger version diff <version_id> <compare>`
+**Signature:** `datatagger api version diff <version_id> <compare>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `version_id` | argument **required** |  |
 | `compare` | argument **required** | Version to compare (uploads_version UUID) |
 
-## `version-file`
+## `api version-file`
 
-### `version-file get`
+### `api version-file get`
 
-**Signature:** `datatagger version-file get <file_id>`
-
-| Parameter | Type | Description |
-|---|---|---|
-| `file_id` | argument **required** |  |
-
-### `version-file parser-processing`
-
-**Signature:** `datatagger version-file parser-processing <file_id>`
+**Signature:** `datatagger api version-file get <file_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `file_id` | argument **required** |  |
 
-### `version-file retrigger-parser`
+### `api version-file parser-processing`
 
-**Signature:** `datatagger version-file retrigger-parser <file_id> <parser_type>`
+**Signature:** `datatagger api version-file parser-processing <file_id>`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `file_id` | argument **required** |  |
+
+### `api version-file retrigger-parser`
+
+**Signature:** `datatagger api version-file retrigger-parser <file_id> <parser_type>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `file_id` | argument **required** |  |
 | `parser_type` | argument | e.g. CSV_VALUE |
 
-### `version-file retry-processing`
+### `api version-file retry-processing`
 
-**Signature:** `datatagger version-file retry-processing <file_id>`
+**Signature:** `datatagger api version-file retry-processing <file_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `file_id` | argument **required** |  |
 
-## `metadata`
+## `api metadata`
 
-### `metadata list`
+### `api metadata list`
 
-**Signature:** `datatagger metadata list <search> <limit>`
+**Signature:** `datatagger api metadata list <search> <limit>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `search` | argument |  |
 | `limit` | argument |  (default: 100) |
 
-### `metadata get`
+### `api metadata get`
 
-**Signature:** `datatagger metadata get <metadata_id>`
+**Signature:** `datatagger api metadata get <metadata_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `metadata_id` | argument **required** |  |
 
-### `metadata tags`
+### `api metadata tags`
 
-**Signature:** `datatagger metadata tags <limit> <search>`
+**Signature:** `datatagger api metadata tags <limit> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 | `search` | argument |  |
 
-### `metadata tag`
+### `api metadata tag`
 
-**Signature:** `datatagger metadata tag <tag_id>`
+**Signature:** `datatagger api metadata tag <tag_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `tag_id` | argument **required** |  |
 
-### `metadata fields`
+### `api metadata fields`
 
-**Signature:** `datatagger metadata fields <limit> <search>`
+**Signature:** `datatagger api metadata fields <limit> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 | `search` | argument |  |
 
-### `metadata field`
+### `api metadata field`
 
-**Signature:** `datatagger metadata field <field_id>`
+**Signature:** `datatagger api metadata field <field_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `field_id` | argument **required** |  |
 
-### `metadata bulk-add`
+### `api metadata bulk-add`
 
 Apply metadata to multiple datasets at once.
 
-**Signature:** `datatagger metadata bulk-add <dataset_ids> <metadata>`
+**Signature:** `datatagger api metadata bulk-add <dataset_ids> <metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `dataset_ids` | argument **required** | Dataset UUIDs |
 | `metadata` | argument **required** | Metadata items as JSON or @file |
 
-### `metadata template`
+### `api metadata template`
 
 #### `metadata template list`
 
-**Signature:** `datatagger metadata template list <limit> <search>`
+**Signature:** `datatagger api metadata template list <limit> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -744,7 +744,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template get`
 
-**Signature:** `datatagger metadata template get <template_id>`
+**Signature:** `datatagger api metadata template get <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -752,7 +752,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template update`
 
-**Signature:** `datatagger metadata template update <template_id> <name>`
+**Signature:** `datatagger api metadata template update <template_id> <name>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -761,7 +761,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template diff`
 
-**Signature:** `datatagger metadata template diff <template_id> <compare>`
+**Signature:** `datatagger api metadata template diff <template_id> <compare>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -770,7 +770,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template lock`
 
-**Signature:** `datatagger metadata template lock <template_id>`
+**Signature:** `datatagger api metadata template lock <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -778,7 +778,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template unlock`
 
-**Signature:** `datatagger metadata template unlock <template_id>`
+**Signature:** `datatagger api metadata template unlock <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -786,17 +786,17 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata template status`
 
-**Signature:** `datatagger metadata template status <template_id>`
+**Signature:** `datatagger api metadata template status <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `template_id` | argument **required** |  |
 
-### `metadata container`
+### `api metadata container`
 
 #### `metadata container list`
 
-**Signature:** `datatagger metadata container list <limit> <search>`
+**Signature:** `datatagger api metadata container list <limit> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -805,7 +805,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container get`
 
-**Signature:** `datatagger metadata container get <container_id>`
+**Signature:** `datatagger api metadata container get <container_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -813,7 +813,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container create`
 
-**Signature:** `datatagger metadata container create <name> <assigned_to_content_type> <assigned_to_object_id> <fields>`
+**Signature:** `datatagger api metadata container create <name> <assigned_to_content_type> <assigned_to_object_id> <fields>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -824,7 +824,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container update`
 
-**Signature:** `datatagger metadata container update <container_id> <name> <fields>`
+**Signature:** `datatagger api metadata container update <container_id> <name> <fields>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -834,7 +834,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container clone`
 
-**Signature:** `datatagger metadata container clone <container_id> <assigned_to_content_type> <assigned_to_object_id>`
+**Signature:** `datatagger api metadata container clone <container_id> <assigned_to_content_type> <assigned_to_object_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -844,7 +844,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container lock`
 
-**Signature:** `datatagger metadata container lock <container_id>`
+**Signature:** `datatagger api metadata container lock <container_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -852,7 +852,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container unlock`
 
-**Signature:** `datatagger metadata container unlock <container_id>`
+**Signature:** `datatagger api metadata container unlock <container_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -860,7 +860,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container status`
 
-**Signature:** `datatagger metadata container status <container_id>`
+**Signature:** `datatagger api metadata container status <container_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -868,7 +868,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container version`
 
-**Signature:** `datatagger metadata container version <container_id> <name> <fields>`
+**Signature:** `datatagger api metadata container version <container_id> <name> <fields>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -878,7 +878,7 @@ Apply metadata to multiple datasets at once.
 
 #### `metadata container restore`
 
-**Signature:** `datatagger metadata container restore <container_id> <template_id>`
+**Signature:** `datatagger api metadata container restore <container_id> <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -889,7 +889,7 @@ Apply metadata to multiple datasets at once.
 
 Import a template container from a file (multipart).
 
-**Signature:** `datatagger metadata container import <file_path> <assigned_to_content_type> <assigned_to_object_id>`
+**Signature:** `datatagger api metadata container import <file_path> <assigned_to_content_type> <assigned_to_object_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -901,18 +901,18 @@ Import a template container from a file (multipart).
 
 Query the available template container pool of a resource.
 
-**Signature:** `datatagger metadata container pool <resource_type> <resource_id>`
+**Signature:** `datatagger api metadata container pool <resource_type> <resource_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `resource_type` | argument **required** | project | folder | dataset |
 | `resource_id` | argument **required** |  |
 
-### `metadata export`
+### `api metadata export`
 
 #### `metadata export list`
 
-**Signature:** `datatagger metadata export list <limit> <offset>`
+**Signature:** `datatagger api metadata export list <limit> <offset>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -921,7 +921,7 @@ Query the available template container pool of a resource.
 
 #### `metadata export get`
 
-**Signature:** `datatagger metadata export get <export_id>`
+**Signature:** `datatagger api metadata export get <export_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -929,7 +929,7 @@ Query the available template container pool of a resource.
 
 #### `metadata export download`
 
-**Signature:** `datatagger metadata export download <export_id> <dest_path> <overwrite>`
+**Signature:** `datatagger api metadata export download <export_id> <dest_path> <overwrite>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -939,37 +939,37 @@ Query the available template container pool of a resource.
 
 #### `metadata export create`
 
-**Signature:** `datatagger metadata export create <container_ids> <format>`
+**Signature:** `datatagger api metadata export create <container_ids> <format>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `container_ids` | argument **required** | Container UUIDs |
 | `format` | argument | json | csv | xml (default: json) |
 
-## `parser-config`
+## `api parser-config`
 
-### `parser-config list`
+### `api parser-config list`
 
-**Signature:** `datatagger parser-config list <limit>`
+**Signature:** `datatagger api parser-config list <limit>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 
-### `parser-config get`
+### `api parser-config get`
 
-**Signature:** `datatagger parser-config get <config_id>`
+**Signature:** `datatagger api parser-config get <config_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `config_id` | argument **required** |  |
 
-### `parser-config available-types`
+### `api parser-config available-types`
 
 
-### `parser-config create`
+### `api parser-config create`
 
-**Signature:** `datatagger parser-config create <assigned_to_object_id> <assigned_to_content_type> <parser_type> <enabled> <config>`
+**Signature:** `datatagger api parser-config create <assigned_to_object_id> <assigned_to_content_type> <parser_type> <enabled> <config>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -979,9 +979,9 @@ Query the available template container pool of a resource.
 | `enabled` | argument |  (default: True) |
 | `config` | argument | Parser config as JSON or @file |
 
-### `parser-config update`
+### `api parser-config update`
 
-**Signature:** `datatagger parser-config update <config_id> <enabled> <config>`
+**Signature:** `datatagger api parser-config update <config_id> <enabled> <config>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -989,37 +989,37 @@ Query the available template container pool of a resource.
 | `enabled` | argument |  |
 | `config` | argument |  |
 
-### `parser-config delete`
+### `api parser-config delete`
 
-**Signature:** `datatagger parser-config delete <config_id> <confirm>`
+**Signature:** `datatagger api parser-config delete <config_id> <confirm>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `config_id` | argument **required** |  |
 | `confirm` | argument |  (default: False) |
 
-## `export`
+## `api export`
 
-### `export list`
+### `api export list`
 
-**Signature:** `datatagger export list <limit> <offset>`
+**Signature:** `datatagger api export list <limit> <offset>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 | `offset` | argument |  (default: 0) |
 
-### `export get`
+### `api export get`
 
-**Signature:** `datatagger export get <export_id>`
+**Signature:** `datatagger api export get <export_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `export_id` | argument **required** |  |
 
-### `export download`
+### `api export download`
 
-**Signature:** `datatagger export download <export_id> <dest_path> <overwrite>`
+**Signature:** `datatagger api export download <export_id> <dest_path> <overwrite>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -1027,9 +1027,9 @@ Query the available template container pool of a resource.
 | `dest_path` | argument **required** |  |
 | `overwrite` | argument |  (default: False) |
 
-### `export create`
+### `api export create`
 
-**Signature:** `datatagger export create <export_type> <uuids> <format> <include_version_file> <include_version_file_metadata>`
+**Signature:** `datatagger api export create <export_type> <uuids> <format> <include_version_file> <include_version_file_metadata>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -1039,27 +1039,27 @@ Query the available template container pool of a resource.
 | `include_version_file` | argument |  (default: False) |
 | `include_version_file_metadata` | argument |  (default: False) |
 
-## `storage`
+## `api storage`
 
-### `storage list`
+### `api storage list`
 
-**Signature:** `datatagger storage list <limit>`
+**Signature:** `datatagger api storage list <limit>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 
-### `storage get`
+### `api storage get`
 
-**Signature:** `datatagger storage get <storage_id>`
+**Signature:** `datatagger api storage get <storage_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `storage_id` | argument **required** |  |
 
-### `storage create`
+### `api storage create`
 
-**Signature:** `datatagger storage create <name> <storage_type> <local_path> <description>`
+**Signature:** `datatagger api storage create <name> <storage_type> <local_path> <description>`
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -1068,110 +1068,110 @@ Query the available template container pool of a resource.
 | `local_path` | argument **required** | local_private_dss_path |
 | `description` | argument |  |
 
-## `approval-queue`
+## `api approval-queue`
 
-### `approval-queue list`
+### `api approval-queue list`
 
-**Signature:** `datatagger approval-queue list <limit>`
+**Signature:** `datatagger api approval-queue list <limit>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 
-### `approval-queue get`
+### `api approval-queue get`
 
-**Signature:** `datatagger approval-queue get <approval_id>`
+**Signature:** `datatagger api approval-queue get <approval_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `approval_id` | argument **required** |  |
 
-### `approval-queue approve`
+### `api approval-queue approve`
 
 Approve (warning: real approval action!).
 
-**Signature:** `datatagger approval-queue approve <approval_id>`
+**Signature:** `datatagger api approval-queue approve <approval_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `approval_id` | argument **required** |  |
 
-## `user`
+## `api user`
 
-### `user list`
+### `api user list`
 
-**Signature:** `datatagger user list <limit> <search>`
+**Signature:** `datatagger api user list <limit> <search>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `limit` | argument |  (default: 100) |
 | `search` | argument |  |
 
-### `user get`
+### `api user get`
 
-**Signature:** `datatagger user get <user_id>`
+**Signature:** `datatagger api user get <user_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `user_id` | argument **required** |  |
 
-### `user me`
+### `api user me`
 
 
-### `user me-update`
+### `api user me-update`
 
-**Signature:** `datatagger user me-update <settings>`
+**Signature:** `datatagger api user me-update <settings>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `settings` | argument | Settings as JSON or @file |
 
-## `system`
+## `api system`
 
-### `system dashboard`
+### `api system dashboard`
 
 
-### `system settings`
+### `api system settings`
 
-**Signature:** `datatagger system settings <key>`
+**Signature:** `datatagger api system settings <key>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `key` | argument | Optional settings key |
 
-### `system cms`
+### `api system cms`
 
-**Signature:** `datatagger system cms <slug>`
+**Signature:** `datatagger api system cms <slug>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `slug` | argument | Optional slug |
 
-### `system cms-slugs`
+### `api system cms-slugs`
 
 
-### `system faq`
+### `api system faq`
 
-**Signature:** `datatagger system faq <faq_id>`
+**Signature:** `datatagger api system faq <faq_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `faq_id` | argument | Optional FAQ ID |
 
-### `system search-schema`
+### `api system search-schema`
 
 
-### `system metadata-keys`
+### `api system metadata-keys`
 
-**Signature:** `datatagger system metadata-keys <template_id>`
+**Signature:** `datatagger api system metadata-keys <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|
 | `template_id` | argument | Required: template UUID |
 
-### `system metadata-choice-options`
+### `api system metadata-choice-options`
 
-**Signature:** `datatagger system metadata-choice-options <template_id>`
+**Signature:** `datatagger api system metadata-choice-options <template_id>`
 
 | Parameter | Type | Description |
 |---|---|---|

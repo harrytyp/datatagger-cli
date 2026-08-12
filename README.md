@@ -16,8 +16,12 @@ experience.
 - **High-level UX** - commands are grouped and concise; the HTTP layer
   (`client.py`) centralizes auth, error formatting and file transfers (TUS
   uploads, streaming downloads).
+- **Clear split** - every raw API wrapper lives under `datatagger api …`
+  (e.g. `datatagger api project create`, one command = one API call);
+  high-level task commands sit on the top level
+  (`datatagger search`, `datatagger new-dataset`, …).
 - **`raw` escape hatch** - any API call, even for endpoints without a dedicated
-  command: `datatagger raw GET /api/v1/settings/ --query limit=1`.
+  command: `datatagger api raw GET /api/v1/settings/ --query limit=1`.
 - **Machine-readable output** - every command prints valid JSON (or a clear
   error message), ready for scripting and CI.
 - **JSON arguments** - inline JSON or `@path/to/file.json` for complex payloads
@@ -100,20 +104,23 @@ datatagger new-dataset "measurement-1" \
   --file ./measurement.csv --publish
 
 # ...or step by step (equivalent):
-datatagger project create "My Project" --description '{"en": "Demo"}'
-datatagger folder create <project-id> "measurements"
-datatagger dataset create "measurement-1" --folder <folder-id>
-datatagger dataset upload <dataset-id> ./measurement.csv
-datatagger dataset publish <dataset-id>
+datatagger api project create "My Project" --description '{"en": "Demo"}'
+datatagger api folder create <project-id> "measurements"
+datatagger api dataset create "measurement-1" --folder <folder-id>
+datatagger api dataset upload <dataset-id> ./measurement.csv
+datatagger api dataset publish <dataset-id>
 
 # Versions: diff, restore
-datatagger version diff <v2-id> <v1-id>
-datatagger dataset restore <dataset-id> <v1-id>
+datatagger api version diff <v2-id> <v1-id>
+datatagger api dataset restore <dataset-id> <v1-id>
 
 # Folder permissions
-datatagger folder set-permissions <folder-id> \
+datatagger api folder set-permissions <folder-id> \
   '[{"email": "person@tum.de", "can_edit": true, "is_folder_admin": false, "is_metadata_template_admin": false}]'
 ```
+
+> Raw API wrappers are grouped under `datatagger api …`; task-level commands
+> (search, workflows) live directly under `datatagger`.
 
 > Note: `description` is a **JSON object** in the current API (e.g. `{"en": "…"}`).
 > Plain text is wrapped automatically to `{"en": …}` by the CLI - a raw string
@@ -125,22 +132,23 @@ datatagger folder set-permissions <folder-id> \
 |---|---|
 | `search` | global search |
 | `new-dataset` | one-command workflow: project -> folder -> dataset -> file -> metadata -> publish |
-| `auth` | `login`, `verify`, `refresh`, `jwt-cookie` |
-| `project` | `list get create update delete folders members members-set membership-list membership-create membership-update membership-delete lock unlock status metadata-templates template-container-pool` |
-| `folder` | `list get create update delete lock unlock status permissions set-permissions metadata-templates template-container-pool` |
-| `dataset` | `list get create update delete publish restore compare upload file-upload add-metadata new-version reference lock unlock status bulk-delete bulk-publish bulk-upgrade upgrade` |
-| `version` | `list get update status download diff` |
-| `version-file` | `get parser-processing retrigger-parser retry-processing` |
-| `metadata` | `list get tags tag fields field bulk-add`; `template` (`list get update diff lock unlock status`); `container` (`list get create update clone lock unlock status version restore import pool`); `export` (`list get download create`) |
-| `parser-config` | `list get create update delete available-types` |
-| `export` | data export jobs: `list get download create` |
-| `storage` | `list get create` |
-| `approval-queue` | `list get approve` |
-| `user` | `list get me me-update` |
-| `system` | `dashboard settings cms cms-slugs faq search-schema metadata-keys metadata-choice-options` |
-| `raw` | arbitrary API call (escape hatch) |
+| `api` | raw API wrappers - one command = one API call |
+| `api auth` | `login`, `verify`, `refresh`, `jwt-cookie` |
+| `api project` | `list get create update delete folders members members-set membership-list membership-create membership-update membership-delete lock unlock status metadata-templates template-container-pool` |
+| `api folder` | `list get create update delete lock unlock status permissions set-permissions metadata-templates template-container-pool` |
+| `api dataset` | `list get create update delete publish restore compare upload file-upload add-metadata new-version reference lock unlock status bulk-delete bulk-publish bulk-upgrade upgrade` |
+| `api version` | `list get update status download diff` |
+| `api version-file` | `get parser-processing retrigger-parser retry-processing` |
+| `api metadata` | `list get tags tag fields field bulk-add`; `template` (`list get update diff lock unlock status`); `container` (`list get create update clone lock unlock status version restore import pool`); `export` (`list get download create`) |
+| `api parser-config` | `list get create update delete available-types` |
+| `api export` | data export jobs: `list get download create` |
+| `api storage` | `list get create` |
+| `api approval-queue` | `list get approve` |
+| `api user` | `list get me me-update` |
+| `api system` | `dashboard settings cms cms-slugs faq search-schema metadata-keys metadata-choice-options` |
+| `api raw` | arbitrary API call (escape hatch) |
 
-➡️ **Complete reference for all 118 commands** (arguments, options, defaults):
+➡️ **Complete reference for all commands** (arguments, options, defaults):
 [docs/COMMANDS.md](docs/COMMANDS.md)
 
 ## Tests

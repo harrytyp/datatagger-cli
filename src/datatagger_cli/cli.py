@@ -164,6 +164,11 @@ app = AsyncTyper(
     no_args_is_help=True,
 )
 
+api_app = AsyncTyper(
+    help="Raw API wrappers - one command = one API call. High-level task commands live on the top level.",
+    no_args_is_help=True,
+)
+app.add_typer(api_app, name="api")
 
 # ---------------------------------------------------------------- Output-Helfer
 
@@ -220,7 +225,7 @@ async def search(
     out(await search_datatagger(term=term, limit=limit))
 
 
-@app.command("raw")
+@api_app.command("raw")
 async def raw(
     method: str = typer.Argument(..., help="HTTP method: GET/POST/PUT/PATCH/DELETE"),
     path: str = typer.Argument(..., help="API path, e.g. /api/v1/settings/"),
@@ -324,7 +329,7 @@ async def new_dataset(
 # ================================================================ AUTH
 
 auth_app = AsyncTyper(help="Authentication", no_args_is_help=True)
-app.add_typer(auth_app, name="auth")
+api_app.add_typer(auth_app, name="auth")
 
 
 @auth_app.command("login")
@@ -375,7 +380,7 @@ async def auth_jwt_cookie(
 # ================================================================ PROJECT
 
 project_app = AsyncTyper(help="Projects", no_args_is_help=True)
-app.add_typer(project_app, name="project")
+api_app.add_typer(project_app, name="project")
 
 
 @project_app.command("list")
@@ -551,7 +556,7 @@ async def project_membership_delete(
 # ================================================================ FOLDER
 
 folder_app = AsyncTyper(help="Folders", no_args_is_help=True)
-app.add_typer(folder_app, name="folder")
+api_app.add_typer(folder_app, name="folder")
 
 
 @folder_app.command("list")
@@ -669,7 +674,7 @@ async def folder_template_container_pool(folder_id: str = typer.Argument(...)):
 # ================================================================ DATASET
 
 dataset_app = AsyncTyper(help="Datasets (uploads)", no_args_is_help=True)
-app.add_typer(dataset_app, name="dataset")
+api_app.add_typer(dataset_app, name="dataset")
 
 
 @dataset_app.command("list")
@@ -875,7 +880,7 @@ async def dataset_upgrade(
 # ================================================================ VERSION
 
 version_app = AsyncTyper(help="Upload versions", no_args_is_help=True)
-app.add_typer(version_app, name="version")
+api_app.add_typer(version_app, name="version")
 
 
 @version_app.command("list")
@@ -939,7 +944,7 @@ async def version_diff(
 # ================================================================ VERSION-FILE
 
 versionfile_app = AsyncTyper(help="Version files & parser processing", no_args_is_help=True)
-app.add_typer(versionfile_app, name="version-file")
+api_app.add_typer(versionfile_app, name="version-file")
 
 
 @versionfile_app.command("get")
@@ -969,7 +974,7 @@ async def versionfile_retry_processing(file_id: str = typer.Argument(...)):
 # ================================================================ METADATA
 
 metadata_app = AsyncTyper(help="Metadata", no_args_is_help=True)
-app.add_typer(metadata_app, name="metadata")
+api_app.add_typer(metadata_app, name="metadata")
 
 
 @metadata_app.command("list")
@@ -1230,7 +1235,7 @@ async def templateexport_create(
 # ================================================================ PARSER-CONFIG
 
 parser_app = AsyncTyper(help="File parser configurations", no_args_is_help=True)
-app.add_typer(parser_app, name="parser-config")
+api_app.add_typer(parser_app, name="parser-config")
 
 
 @parser_app.command("list")
@@ -1296,7 +1301,7 @@ async def parser_delete(
 # ================================================================ EXPORT (data jobs)
 
 export_app = AsyncTyper(help="Export jobs (datasets)", no_args_is_help=True)
-app.add_typer(export_app, name="export")
+api_app.add_typer(export_app, name="export")
 
 
 @export_app.command("list")
@@ -1338,7 +1343,7 @@ async def export_create(
 # ================================================================ STORAGE
 
 storage_app = AsyncTyper(help="Storage systems", no_args_is_help=True)
-app.add_typer(storage_app, name="storage")
+api_app.add_typer(storage_app, name="storage")
 
 
 @storage_app.command("list")
@@ -1367,7 +1372,7 @@ async def storage_create(
 # ================================================================ APPROVAL-QUEUE
 
 approval_app = AsyncTyper(help="Approval queue (publication approvals)", no_args_is_help=True)
-app.add_typer(approval_app, name="approval-queue")
+api_app.add_typer(approval_app, name="approval-queue")
 
 
 @approval_app.command("list")
@@ -1389,7 +1394,7 @@ async def approval_approve(approval_id: str = typer.Argument(...)):
 # ================================================================ USER
 
 user_app = AsyncTyper(help="Users", no_args_is_help=True)
-app.add_typer(user_app, name="user")
+api_app.add_typer(user_app, name="user")
 
 
 @user_app.command("list")
@@ -1420,7 +1425,7 @@ async def user_me_update(
 # ================================================================ SYSTEM (Dashboard/Settings/CMS/FAQ)
 
 system_app = AsyncTyper(help="Dashboard, Settings, CMS, FAQ", no_args_is_help=True)
-app.add_typer(system_app, name="system")
+api_app.add_typer(system_app, name="system")
 
 
 @system_app.command("dashboard")

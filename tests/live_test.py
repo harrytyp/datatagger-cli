@@ -26,6 +26,10 @@ if not os.environ.get("FDM_TOKEN"):
     print("FEHLER: FDM_TOKEN Umgebungsvariable fehlt.", file=sys.stderr)
     sys.exit(3)
 
+API_GROUPS = {"auth", "project", "folder", "dataset", "version", "version-file",
+              "metadata", "parser-config", "export", "storage", "approval-queue",
+              "user", "system", "raw"}
+
 TS = time.strftime("%Y%m%d-%H%M%S")
 PREFIX = f"dtcli-test-{TS}"
 results: list[dict] = []
@@ -35,6 +39,8 @@ def run(args, timeout=150):
     """CLI-Aufruf; liefert (returncode, stdout, stderr). None-Argumente werden zu '' (kein Crash)."""
     time.sleep(0.1)  # dezente Drossel gegen API-Rate-Limits
     args = ["" if a is None else str(a) for a in args]
+    if args and args[0] in API_GROUPS:
+        args = ["api"] + args
     try:
         p = subprocess.run([BIN, *args], capture_output=True, text=True, timeout=timeout,
                            encoding="utf-8", errors="replace")
