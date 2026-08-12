@@ -1,7 +1,8 @@
 # Command Reference
 
 Complete reference for every `datatagger` command. All commands require 
-`FDM_TOKEN` (and optionally `FDM_BASE_URL`) as environment variables.
+`FDM_TOKEN` (the `token` cookie from datatagger.ub.tum.de, sent as Bearer) 
+and optionally `FDM_BASE_URL` as environment variables.
 
 JSON arguments accept inline JSON or `@path/to/file.json`.
 

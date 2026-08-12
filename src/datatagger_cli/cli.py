@@ -160,7 +160,7 @@ class AsyncTyper(typer.Typer):
 
 console = Console()
 app = AsyncTyper(
-    help="DataTagger CLI – full API access with high-level commands for the TUM DataTagger API.\n\nAuth: FDM_TOKEN (Bearer) + FDM_BASE_URL (default https://datatagger.ub.tum.de) as environment variables.",
+    help="DataTagger CLI – full API access with high-level commands for the TUM DataTagger API.\n\nAuth: FDM_TOKEN (the `token` cookie from datatagger.ub.tum.de, sent as Bearer) + FDM_BASE_URL (default https://datatagger.ub.tum.de) as environment variables.",
     no_args_is_help=True,
 )
 

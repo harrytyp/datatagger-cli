@@ -41,12 +41,21 @@ uv tool install .  # or: pip install .
 
 ## Authentication
 
+The CLI authenticates with the raw token from the DataTagger web app (no extra
+API token needed). Get it:
+
+1. Open https://datatagger.ub.tum.de and log in
+2. Open DevTools (**F12**) → **Storage → Cookies → https://datatagger.ub.tum.de**
+3. Copy the value of the **`token`** cookie
+4. Export it:
+
 ```bash
-export FDM_TOKEN="your-token"        # DataTagger → Settings → API token
+export FDM_TOKEN="<cookie-token-value>"
 export FDM_BASE_URL="https://datatagger.ub.tum.de"   # optional, this is the default
 ```
 
-The token is only read from the environment — never stored by the CLI.
+The CLI sends it as `Authorization: Bearer <token>`. It is only read from the
+environment — never stored by the CLI.
 
 ## Quickstart
 

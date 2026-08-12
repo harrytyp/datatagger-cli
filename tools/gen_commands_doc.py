@@ -10,7 +10,8 @@ root = get_command(cli.app)
 lines = []
 lines.append("# Command Reference\n")
 lines.append("Complete reference for every `datatagger` command. All commands require ")
-lines.append("`FDM_TOKEN` (and optionally `FDM_BASE_URL`) as environment variables.\n")
+lines.append("`FDM_TOKEN` (the `token` cookie from datatagger.ub.tum.de, sent as Bearer) ")
+lines.append("and optionally `FDM_BASE_URL` as environment variables.\n")
 lines.append("JSON arguments accept inline JSON or `@path/to/file.json`.\n")
 lines.append("Destructive operations require `--confirm`.\n")
 
