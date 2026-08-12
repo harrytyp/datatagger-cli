@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Credentials — niemals committen
+.env
+.env.*
+!*.env.example
+
+# Test-Artefakte
+tests/live_test_result.txt
+smoke*.csv
+*.log
