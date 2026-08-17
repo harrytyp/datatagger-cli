@@ -243,12 +243,12 @@ async def raw(
 def _resource_id(resp: Any, hint: str) -> Optional[str]:
     """Extract a resource UUID from an API response (dict or bare string)."""
     if isinstance(resp, dict):
-        for key in (hint, 'id', 'uuid', 'name'):
+        for key in (hint, 'pk', 'id', 'uuid'):
             val = resp.get(key)
             if isinstance(val, str) and val:
                 return val
         return None
-    if isinstance(resp, str) and resp.strip():
+    if isinstance(resp, str) and resp.strip() and not resp.startswith(("API Error", "Error:")):
         return resp.strip()
     return None
 

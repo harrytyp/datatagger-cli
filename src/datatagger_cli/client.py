@@ -12,6 +12,7 @@ import base64
 import json
 import mimetypes
 import os
+import re
 from typing import Any, Optional
 
 import httpx
@@ -133,6 +134,11 @@ async def upload_file_tus(endpoint: str, file_path: str) -> str:
     if not upload_endpoint.startswith("uploads-dataset/"):
         return f"Error: TUS upload requires an uploads-dataset endpoint, got: {endpoint}"
     ds_id = upload_endpoint.split("/")[1]
+    if not re.fullmatch(
+        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+        ds_id,
+    ):
+        return f"Error: TUS upload requires a valid dataset UUID, got: {ds_id!r}"
 
     filename = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
@@ -158,7 +164,7 @@ async def upload_file_tus(endpoint: str, file_path: str) -> str:
             )
             init_resp.raise_for_status()
 
-            location = init_resp.headers.get("Location", "")
+            location = init_resp.headers.get("Location", "").strip()
             if not location:
                 return "Error: TUS init returned no Location header."
             tus_url = location
